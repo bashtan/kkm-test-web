@@ -14,6 +14,7 @@ export function ExecuteCommand(
   // Для активации скрипта расширения ваша страница должна содержать в теге "head" строку:
   // <script>var KkmServerAddIn = {};</script>
   try {
+    console.log("window.KkmServer", window.KkmServer);
     if (window.KkmServer !== undefined) {
       // Если данные - строка JSON конвентируем в объект
       if (typeof Data == "string") Data = JSON.parse(Data);
