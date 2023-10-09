@@ -1,7 +1,7 @@
 // Общая функция вызова API Unit-server-а
 // Будет использоватся во всех примерах
-var UrlServer = ""; // HTTP адрес сервера торгового оборудования, если пусто то локальный вызов
-var User = ""; // Пользователь доступа к серверу торгового оборудования
+var UrlServer = "http://localhost:5893"; // HTTP адрес сервера торгового оборудования, если пусто то локальный вызов
+var User = "User"; // Пользователь доступа к серверу торгового оборудования
 var Password = ""; // Пароль доступа к серверу торгового оборудования
 
 export function ExecuteCommand(
@@ -13,12 +13,24 @@ export function ExecuteCommand(
   // Проверка стоит ли расширение, и если стоит то отправка через расширение
   // Для активации скрипта расширения ваша страница должна содержать в теге "head" строку:
   // <script>var KkmServerAddIn = {};</script>
+  // const dd = {
+  //   Command: "PrintDocument",
+  //   NumDevice: 3,
+  //   IdCommand: guid(),
+  //   CheckStrings: [
+  //     { PrintText: { Text: "test prt" } },
+  //     { PrintText: { Text: "ww222e" } },
+  //   ],
+  // };
+
   try {
     console.log("window.KkmServer", window.KkmServer);
     if (window.KkmServer !== undefined) {
       // Если данные - строка JSON конвентируем в объект
       if (typeof Data == "string") Data = JSON.parse(Data);
       // Выполняем команду через расширение
+
+      console.log("Data", Data);
       window.KkmServer.Execute(ExecuteSuccess, Data);
       //Возврат - вызов по Http не нужен
       return;
@@ -49,54 +61,61 @@ export function ExecuteCommand(
   }
 
   // Отправляем данные по HTTP протоколу
-  // var Url =
-  //   UrlServer +
-  //   (UrlServer == ""
-  //     ? window.location.protocol + "//" + window.location.host + "/"
-  //     : "/") +
-  //   "Execute";
-  // var HeaderAuthorization =
-  //   User !== "" || Password !== ""
-  //     ? "Basic " + btoa(User + ":" + Password)
-  //     : "";
-  // var IsRerror = false;
-  // const response = fetch(Url, {
-  //   method: "POST", // *GET, POST, PUT, DELETE, etc.
-  //   mode: "cors", // no-cors, *cors, same-origin
-  //   cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-  //   //credentials: 'same-origin', // include, *same-origin, omit
-  //   headers: {
-  //     "Content-Type": "application/json; charset=UTF-8",
-  //     Authorization: HeaderAuthorization,
-  //   },
-  //   redirect: "follow", // manual, *follow, error
-  //   referrerPolicy: "no-referrer", // no-referrer, *client
-  //   body: JSon,
-  // })
-  //   .catch((Exception) => {
-  //     IsRerror = true;
-  //     FunError("Ошибка: " + Exception.message);
-  //   })
-  //   .then((response) => {
-  //     if (IsRerror == false) {
-  //       response
-  //         .json()
-  //         .catch((Exception) => {
-  //           IsRerror = true;
-  //           FunSuccess("Ошибка: " + Exception.message);
-  //         })
-  //         .then((resultJson) => {
-  //           if (IsRerror == false) {
-  //             FunSuccess(resultJson);
-  //           }
-  //         });
-  //     }
-  //   });
+  var Url =
+    UrlServer +
+    (UrlServer === ""
+      ? window.location.protocol + "//" + window.location.host + "/"
+      : "/") +
+    "Execute";
+  var HeaderAuthorization =
+    User !== "" || Password !== ""
+      ? "Basic " + btoa(User + ":" + Password)
+      : "";
+
+  console.log("!!Url", Url);
+  console.log("!!Data", Data);
+
+  var IsRerror = false;
+  const response = fetch(Url, {
+    method: "POST", // *GET, POST, PUT, DELETE, etc.
+    mode: "cors", // no-cors, *cors, same-origin
+    cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+    //credentials: 'same-origin', // include, *same-origin, omit
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: HeaderAuthorization,
+    },
+    redirect: "follow", // manual, *follow, error
+    referrerPolicy: "no-referrer", // no-referrer, *client
+    body: JSON.stringify(Data),
+  })
+    .catch((Exception) => {
+      IsRerror = true;
+      FunError("Ошибка: " + Exception.message);
+    })
+    .then((response) => {
+      if (IsRerror === false) {
+        response
+          .json()
+          .catch((Exception) => {
+            console.log("Exception", Exception);
+            IsRerror = true;
+            FunSuccess("!Ошибка: " + Exception.message);
+          })
+          .then((resultJson) => {
+            console.log("resultJson", resultJson);
+            if (IsRerror == false) {
+              FunSuccess(resultJson);
+            }
+          });
+      }
+    });
 }
 
 // Функция вызываемая после обработки команды - обработка возвращаемых данных
 // Здесь можно посмотреть как получить возвращаемые данные
 export function ExecuteSuccess(Rezult) {
+  console.log("ExecuteSuccess Rezult", Rezult);
   let MessageStatus = "";
   let MessageError = "";
   //----------------------------------------------------------------------

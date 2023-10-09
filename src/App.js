@@ -2,6 +2,7 @@ import "./App.css";
 
 import { useState } from "react";
 import { PrintDocument } from "./commands/printDocument";
+import { RegisterCheck } from "./commands/registerCheck";
 
 function App() {
   const [server, setServer] = useState("AddIn");
@@ -35,12 +36,7 @@ function App() {
   };
 
   const registerCheck = () => {
-    console.log("server", server);
-    console.log("device", device);
-    console.log("login", login);
-    console.log("password", password);
-
-    setResponce("empty");
+    RegisterCheck(device, 0);
   };
 
   const registerCorrectionCheck = () => {};
