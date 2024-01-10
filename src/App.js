@@ -42,7 +42,7 @@ function App() {
   };
 
   const registerCheck = () => {
-    RegisterCheck(device, 0);
+    RegisterCheck(device, 0, false, licenseKey);
   };
 
   const registerCorrectionCheck = () => {};
