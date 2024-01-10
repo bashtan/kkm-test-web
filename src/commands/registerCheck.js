@@ -1,12 +1,12 @@
 import { ExecuteCommand, guid } from "./kkm";
 
 // Печать чека
-export function RegisterCheck(NumDevice, TypeCheck, IsBarCode, Print) {
+export function RegisterCheck(NumDevice, TypeCheck, IsBarCode, keySubLicensing) {
   // Подготовка данных команды
   var Data = {
     // Команда серверу
     Command: "RegisterCheck",
-    
+
 
     //***********************************************************************************************************
     // ПОЛЯ ПОИСКА УСТРОЙСТВА
@@ -86,7 +86,7 @@ export function RegisterCheck(NumDevice, TypeCheck, IsBarCode, Print) {
     //ClientId: "557582273e4edc1c6f315efe",
     // Это только для тестов: Получение ключа суб-лицензии : ВНИМАНИЕ: ключ суб-лицензии вы должны генерить у себя на сервере!!!!
     //KeySubLicensing: GetKeySubLicensing("sochi@papa.com", "12qw12"),
-
+    KeySubLicensing: keySubLicensing,
     // Только для чеков коррекции:
     //Тип коррекции 0 - самостоятельно 1 - по предписанию, Тег 1173, Только для чеков коррекции!
     CorrectionType: 1,
