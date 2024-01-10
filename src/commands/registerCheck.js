@@ -6,6 +6,7 @@ export function RegisterCheck(NumDevice, TypeCheck, IsBarCode, Print) {
   var Data = {
     // Команда серверу
     Command: "RegisterCheck",
+    
 
     //***********************************************************************************************************
     // ПОЛЯ ПОИСКА УСТРОЙСТВА

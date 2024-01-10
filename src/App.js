@@ -3,13 +3,19 @@ import "./App.css";
 import { useState } from "react";
 import { PrintDocument } from "./commands/printDocument";
 import { RegisterCheck } from "./commands/registerCheck";
+import { XReport } from "./commands/xReport";
+import { GetKeySubLicensing } from "./commands/sublicense";
 
 function App() {
   const [server, setServer] = useState("AddIn");
   const [device, setDevice] = useState(0);
-  const [login, setLogin] = useState("User");
+  const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [responce, setResponce] = useState("");
+
+  const [licenseKey, setLicenseKey] = useState("");
+
+  // const [password, setPassword] = useState("");
 
   const onChangeServer = (event) => {
     const value = event.target.value;
@@ -32,7 +38,7 @@ function App() {
   };
 
   const printDocument = () => {
-    PrintDocument(device);
+    PrintDocument(device, false, licenseKey);
   };
 
   const registerCheck = () => {
@@ -46,17 +52,48 @@ function App() {
   const openCashDrawer = () => {};
   const openShift = () => {};
   const closeShift = () => {};
-  const xReport = () => {};
+  const xReport = () => {
+    XReport(device);
+  };
   const ofdReport = () => {};
   const getDataCheck = () => {};
   const getDataKKT = () => {};
   const executeJSON = () => {};
+
+  const onGetSubLicense = () => {
+    const key = GetKeySubLicensing(login, password);
+    setLicenseKey(key);
+  };
 
   return (
     <div className="App">
       <header></header>
       <div className="App-Container">
         <p>
+          <div>
+            <p>
+              Логин:
+              <input
+                type="text"
+                name="Login"
+                placeholder="email"
+                size="40"
+                value={login}
+                onChange={onChangeLogin}
+              />
+              Пароль:
+              <input
+                type="text"
+                name="Password"
+                placeholder="password"
+                size="40"
+                value={password}
+                onChange={onChangePassword}
+              />
+            </p>
+            <button onClick={onGetSubLicense}>Получить сублицензию</button>
+            <div>{licenseKey}</div>
+          </div>
           Выберите сервер:
           <select id="SetServer" onChange={onChangeServer}>
             <option value="AddIn">Через расширение</option>
@@ -114,24 +151,7 @@ function App() {
             #endif
           </select>
         </p>
-        <p>
-          Логин:
-          <input
-            type="text"
-            name="Login"
-            size="10"
-            value={login}
-            onChange={onChangeLogin}
-          />
-          Пароль:
-          <input
-            type="text"
-            name="Password"
-            size="10"
-            value={password}
-            onChange={onChangePassword}
-          />
-        </p>
+
         <p>
           <button onClick={printDocument}>Печать чека</button>
         </p>

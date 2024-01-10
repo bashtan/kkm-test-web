@@ -1,7 +1,7 @@
 import { ExecuteCommand, guid } from "./kkm";
 
 // Печать чеков
-export function PrintDocument(NumDevice, IsBarCode) {
+export function PrintDocument(NumDevice, IsBarCode, KeySubLicensing) {
   // Подготовка данных команды
   var Data = {
     // Команда серверу
@@ -13,6 +13,7 @@ export function PrintDocument(NumDevice, IsBarCode) {
       { PrintText: { Text: "Пример печати поля:1" } },
       { PrintText: { Text: "Print_doc:1" } },
     ],
+    KeySubLicensing,
   };
   //Если чек без ШК то удаляем строку с ШК
   if (IsBarCode === false) {
